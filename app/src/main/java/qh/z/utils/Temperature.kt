@@ -5,11 +5,11 @@ import java.io.File
 /**
  * Created by qingheng on 2018-8-24 024.
  */
-class Cpu {
-    val temperature: Double
+class Temperature {
 
-    init {
-        temperature = try {
+    // 获取CPU温度
+    fun getCpuTemperature () : Double {
+        return try {
             File("/sys/class/thermal/")
                     .listFiles{ pathName -> pathName.isDirectory
                             && pathName.name.startsWith("thermal_zone")}

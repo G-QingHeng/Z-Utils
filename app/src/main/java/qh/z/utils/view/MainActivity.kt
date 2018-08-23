@@ -10,8 +10,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
-import qh.z.utils.Cpu
 import qh.z.utils.R
+import qh.z.utils.Temperature
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -20,25 +20,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val temperatureStr: String = String.format("%.2f", Cpu().temperature)
-
+        val cpuTemperature = Temperature()
+        var temperature: String
         // 获取CPU温度
         launch(UI) {
             while (true) {
-                println("${Thread.currentThread().name}: CPU温度: " + temperatureStr + "℃")
-                tv1.text = "CPU温度：" + temperatureStr + "℃"
+                temperature = String.format("%.2f", cpuTemperature.getCpuTemperature())
+                println("[${Thread.currentThread().name}] CPU温度: ${temperature}℃")
+                tv1.text = "CPU温度: ${temperature}℃"
                 delay(1, TimeUnit.SECONDS)
             }
         }
-
-        // 获取电池温度
-
     }
+
     val batteryReceiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val temperature = intent?.getIntExtra("temperature", 0)!! / 10.0
             val temperatureStr: String = String.format("%.2f", temperature)
-            tv2.text = "电池温度：" + temperatureStr + "℃"
+            tv2.text = "电池温度: ${temperatureStr}℃"
         }
     }
 
